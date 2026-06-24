@@ -1,23 +1,25 @@
 // 原始 app.js
 const express = require("express")
+const cors = require("cors")
 const app = express()
 const PORT = 3060
 
-app.get("/coaches/:id", (req, res) => {
-  const coachId = req.params.id
+app.use(cors())
+app.use(express.json())
+
+app.get("/", (req, res) => {
   res.status(200).json({
     "status":"success",
-    "coachId":coachId
+    "message":"API 運作中"
   })
 })
 
-app.get("/courses", (req,res)=> {
-  const { type, limit } = req.query
-  res.status(200).json({
+app.post("/members", (req, res) => {
+  const { name } = req.body
+  res.status(201).json({
     "status":"success",
-    "filter": {
-      "type": type,
-      "limit": limit
+    "data": {
+      "name": name
     }
   })
 })
@@ -25,7 +27,6 @@ app.get("/courses", (req,res)=> {
 app.listen(PORT, ()=>{
   console.log(`Server is running on http://localhost:${PORT}`)
 })
-
 
 
 
