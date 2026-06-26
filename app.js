@@ -1,19 +1,17 @@
 // 原始 app.js
 const express = require("express")
 const cors = require("cors")
-const memberRoute = require("./routes/members")
 const app = express()
-const PORT = 3000
+const membersRouter = require("./routes/members")
+const PORT = 3010
 
 app.use(cors())
 app.use(express.json())
+app.use("/members", membersRouter)
 
-app.use("/members", memberRoute)
-
-app.listen(PORT, ()=>{
-  console.log(`Server is running on port ${PORT}`)
+app.listen(PORT, () => {
+  console.log(`app is listening on port: ${PORT}`)
 })
-
 
 
 
