@@ -1,21 +1,29 @@
 // 原始 app.js
-const express = require("express")
-const cors = require("cors")
-const app = express()
-const membersRouter = require("./routes/members")
-const PORT = 3010
+const bcrypt = require("bcrypt")
 
-app.use(cors())
-app.use(express.json())
-app.use("/members", membersRouter)
+async function hashPassword(password){
+  const salted = await bcrypt.genSalt(10)
+  const hashed = await bcrypt.hash(password, salted)
+  return hashed
+}
 
-app.listen(PORT, () => {
-  console.log(`app is listening on port: ${PORT}`)
-})
+async function verifyPassword(password, hash){
+  const isMatch = await bcrypt.compare(password, hash)
+  return isMatch
+}
 
+async function main() {
+  const hashed = await hashPassword('hello123');
+  console.log('雜湊結果：', hashed);
 
+  const correct = await verifyPassword('hello123', hashed);
+  console.log('正確密碼比對：', correct);
 
+  const wrong = await verifyPassword('wrongPass', hashed);
+  console.log('錯誤密碼比對：', wrong);
+}
 
+main();
 
 
 
