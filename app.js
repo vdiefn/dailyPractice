@@ -1,29 +1,27 @@
-// 原始 app.js
 require("dotenv").config()
 const express = require("express")
 const cors = require("cors")
-const authMiddleware = require("./middleware/auth")
-const jwt = require("jsonwebtoken")
+const authRouter = require("./routes/auth")
+const noteRouter = require("./routes/note")
 
 const app = express()
 
 app.use(cors())
 app.use(express.json())
 
-app.post("/login", (req, res) => {
-  const payload = { userId: 1, email: 'member@gym.com' }
-  const secret = process.env.JWT_SECRET
-  const token = jwt.sign(payload, secret, {expiresIn:"7d"})
+app.use("/auth", authRouter)
+app.use("/note", noteRouter)
 
-  res.status(200).json({ status:"success", data: payload, token })
+app.use((req,res) => {
+  res.status(404).json({ status: 'error', message: '路由不存在' });
 })
 
-app.get("/profile", authMiddleware, (req, res) => {
-  res.status(200).json({ status:"success", data: req.user })
+app.use((err, req, res, next) => {
+  res.status(500).json({ status: "error", message: err.message})
 })
 
 const PORT = 3000
 
 app.listen(PORT, () => {
-  console.log(`app is listening on port: ${PORT}`)
+  console.log(`app is listening on PORT:${3000}`)
 })
